@@ -15,22 +15,21 @@ class ChatApp extends Component {
   }
 
   componentDidMount() {
-    // Initialize your Scaledrone connection here
-    const drone = new window.Scaledrone("AZ7z8FlaczwkzUcB", {
+    this.drone = new window.Scaledrone("AZ7z8FlaczwkzUcB", {
       data: {
         name: this.getRandomName(),
       },
     });
 
-    drone.on("open", (error) => {
+    this.drone.on("open", (error) => {
       if (error) {
         return console.error(error);
       }
       console.log("Successfully connected to Scaledrone");
 
-      this.setState({ currentUserID: drone.clientId });
+      this.setState({ currentUserID: this.drone.clientId });
 
-      const room = drone.subscribe("observable-room");
+      const room = this.drone.subscribe("observable-room");
       room.on("open", (error) => {
         if (error) {
           return console.error(error);
@@ -40,38 +39,34 @@ class ChatApp extends Component {
 
       room.on("members", (m) => {
         this.setState({ members: m });
-        this.updateMembersDOM();
       });
 
       room.on("member_join", (member) => {
         console.log(`Member joined: ${member.id}`);
         const updatedMembers = [...this.state.members, member];
         this.setState({ members: updatedMembers });
-        this.updateMembersDOM();
       });
 
-      room.on("member_leave", ({ id, member }) => {
-        console.log(`Member left: ${member.id}`);
+      room.on("member_leave", ({ id }) => {
         const updatedMembers = this.state.members.filter(
           (member) => member.id !== id
         );
         this.setState({ members: updatedMembers });
-        this.updateMembersDOM();
       });
 
       room.on("data", (text, member) => {
         if (member) {
           console.log("Received message:", text);
-          this.addMessageToListDOM(text, member);
+          this.addMessageToList(text, member);
         }
       });
     });
 
-    drone.on("close", (event) => {
+    this.drone.on("close", (event) => {
       console.log("Connection was closed", event);
     });
 
-    drone.on("error", (error) => {
+    this.drone.on("error", (error) => {
       console.error(error);
     });
   }
@@ -225,9 +220,6 @@ class ChatApp extends Component {
 
     this.setState({ inputValue: "" });
 
-    // Publish the message using Scaledrone
-    // const drone = new window.Scaledrone("AZ7z8FlaczwkzUcB");
-    // drone.publish
     if (this.drone) {
       this.drone.publish({
         room: "observable-room",
@@ -238,16 +230,14 @@ class ChatApp extends Component {
 
   createMemberElement(member) {
     const { name } = member.clientData;
-    return <div key={member.id}>{name}</div>;
+    return (
+      <div key={member.id} className="member">
+        {name}
+      </div>
+    );
   }
 
-  updateMembersDOM() {
-    const { members } = this.state;
-    // Update the DOM with the list of members
-    // You can map through 'members' and render them here
-  }
-
-  addMessageToListDOM(text, member) {
+  addMessageToList(text, member) {
     const { messages } = this.state;
     const updatedMessages = [
       ...messages,
@@ -256,11 +246,17 @@ class ChatApp extends Component {
         member,
       },
     ];
-    this.setState({ messages: updatedMessages });
+
+    this.setState({ messages: updatedMessages }, () => {
+      if (this.messagesContainer) {
+        this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
+      }
+    });
   }
 
   render() {
     const { inputValue, members } = this.state;
+    const currentUserID = this.state.currentUserID;
 
     return (
       <div className="app">
@@ -268,9 +264,16 @@ class ChatApp extends Component {
         <div className="members-list">
           {members.map((member) => this.createMemberElement(member))}
         </div>
-        <div className="messages">
+        <div className="messages" ref={(el) => (this.messagesContainer = el)}>
           {this.state.messages.map((message, index) => (
-            <div key={index}>
+            <div
+              key={index}
+              className={`message ${
+                message.member.id === currentUserID
+                  ? "message-left"
+                  : "message-right"
+              }`}
+            >
               {this.createMemberElement(message.member)} {message.text}
             </div>
           ))}

@@ -59,12 +59,7 @@
   margin-left: auto;
 }
 
-.message-right .member {
-  text-align: end;
-}
-
 .member {
-  padding-right: 10px;
   padding-bottom: 10px;
   position: relative;
   color: #423f3f;
@@ -93,12 +88,3 @@
   background-color: rgb(251, 188, 128);
   border-radius: 5px;
 }
-
-
-
-
-
-
-
-
-
