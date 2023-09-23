@@ -1,38 +1,104 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.app {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 13px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  max-height: 100vh;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-.App-link {
-  color: #61dafb;
+.members-count,
+.members-list,
+.messages {
+  padding: 15px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.members-list {
+  border: 1px solid black;
+  width: max-content;
+  margin: 0 auto;
 }
+.members-count {
+  margin: 0 auto;
+}
+
+.messages {
+  flex-shrink: 1;
+  margin-top: 12px;
+  overflow: auto;
+  width: 98%;
+  height: 60vh;
+}
+
+.message-left {
+  padding: 15px 5px;
+  border-radius: 8px;
+  margin-bottom: 2%;
+  display: flex;
+  flex-direction: column;
+  width: max-content;
+  max-width: 70%;
+  overflow-wrap: break-word;
+  background-color: rgba(41, 173, 234, 0.707);
+  color: #ffffff;
+  margin-right: auto;
+}
+
+.message-right {
+  padding: 15px 5px;
+  border-radius: 8px;
+  margin-bottom: 2%;
+  display: flex;
+  flex-direction: column;
+  width: max-content;
+  max-width: 70%;
+  overflow-wrap: break-word;
+  background-color: rgb(245, 48, 166);
+  color: #ffffff;
+  margin-left: auto;
+}
+
+.message-right .member {
+  text-align: end;
+}
+
+.member {
+  padding-right: 10px;
+  padding-bottom: 10px;
+  position: relative;
+  color: #423f3f;
+}
+
+.message-form {
+  display: flex;
+  position: absolute;
+  bottom: 2%;
+  flex-shrink: 0;
+  width: 98%;
+}
+
+.message-form__input {
+  flex-grow: 1;
+  border: 1px solid #dfdfdf;
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+.message-form__button {
+  margin: 10px;
+  padding: 1% 1.6%;
+  font-size: 1em;
+  background-color: rgb(251, 188, 128);
+  border-radius: 5px;
+}
+
+
+
+
+
+
+
+
+
